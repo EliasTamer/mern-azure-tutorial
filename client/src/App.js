@@ -2,11 +2,9 @@ import { useEffect } from "react";
 import "./App.css";
 import baseUrl from "./baseUrl";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 function App() {
-  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -28,13 +26,11 @@ function App() {
           return (
             <div>
               <h3>
-                {category.name}categories
+                {category.name}
               </h3>
             </div>
           );
         })}
-
-      <button onClick={() => navigate("create")}>Create</button>
     </div>
   );
 }
