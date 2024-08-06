@@ -7,26 +7,28 @@ import { useState } from "react";
 
 function App() {
   const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     axios
-      .get(`${baseUrl}/get-users`)
-      .then((res) => setUsers(res.data))
+      .get(`${baseUrl}/categories/getCategories`)
+      .then((res) => {
+        console.log(res.data.categories);
+        setCategories(res.data.categories)
+      })
       .catch((err) => console.log(err));
   }, []);
 
   return (
     <div className="App">
-      <h1>READ</h1>
+      <h1>CATEGORIES</h1>
 
-      {users &&
-        users.length > 0 &&
-        users.map((user) => {
+      {categories &&
+        categories.map((category) => {
           return (
             <div>
               <h3>
-                {user.name} {user.lastName}
+                {category.name}categories
               </h3>
             </div>
           );

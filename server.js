@@ -1,10 +1,16 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const path = require('path');
+const app = express();
+
 const mongoose = require("mongoose");
 const port = process.env.PORT || 3001;
 
-const app = express();
+
+const authRoutes = require("./routes/auth");
+const categoryRoutes = require("./routes/categories");
+const productRoutes = require("./routes/products");
 
 app.use(express.json());
 app.use(cors());
@@ -14,34 +20,24 @@ mongoose
   .then(() => console.log("Database is connected..."))
   .catch((err) => console.log(err));
 
-//db schema
-const userSchema = mongoose.Schema({
-  name: String,
-  lastName: String,
-});
+  app.use('/images', express.static(path.join(__dirname, 'images')));
 
-//db model
-const User = new mongoose.model("User", userSchema);
 
-app.get("/get-users", (req, res) => {
-  User.find()
-    .then((users) => res.json(users))
-    .catch((err) => console.log(err));
-});
-
-app.post("/create", (req, res) => {
-  //save to mongodb and send response
-  const newUser = new User({
-    name: req.body.name,
-    lastName: req.body.lastName,
+  app.use("/auth", authRoutes);
+  app.use("/categories", categoryRoutes);
+  app.use("/products", productRoutes);
+  
+  // to handle the thrown errors in my controllers
+  app.use((error, req, res, next) => {
+    const status = error.statusCode || 500;
+    const message = error.message;
+    const data = error.data;
+  
+    res.status(status).json({
+      message: message,
+      data: data,
+    });
   });
-
-  newUser
-    .save()
-    .then((user) => res.json(user))
-    .catch((err) => console.log(err));
-});
-
 
 app.use(express.static("./client/build"));
 app.get("*", (req, res) => {
