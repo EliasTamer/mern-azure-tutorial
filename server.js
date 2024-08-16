@@ -23,9 +23,9 @@ mongoose
   app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
-  app.use("/auth", authRoutes);
-  app.use("/categories", categoryRoutes);
-  app.use("/products", productRoutes);
+  app.use("/api/auth", authRoutes);
+  app.use("/api/categories", categoryRoutes);
+  app.use("/api/products", productRoutes);
   
   // to handle the thrown errors in my controllers
   app.use((error, req, res, next) => {
